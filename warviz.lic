@@ -1,0 +1,75 @@
+=begin
+
+	Warlock integration of Visualizer.lic with some additional ambient niceties
+
+	  To start: ;warviz
+	   To stop: ;warviz stop
+
+            author: Raidek (raidekoptix@gmail.com)
+   original author: Visualizer.lic by Selfane, Tysong (art by Alosaka, Oro)
+              game: any
+           version: 1.0.0
+          required: Lich >= 5.17.0
+
+   changelog:
+      1.0.0 (2026-05-05)
+        Initial release
+=end
+
+# Lich directives
+no_kill_all
+no_pause_all
+hide_me
+silence_me
+
+supernodes = [ 1118,3005,3040,4102,5052,7120,7199,7354,7355,102103,103003,104002,105005,106013,107102,108004,109006,210001,211002,212006,213005,214011,216005,217006,218013,219051,312033,336651,397002,2101008,2101400,2101945,3001001,3001025,3003041,3010004,3201029,3201112,3216007,3216012,3216024,4002006,4002006,4002113,4002113,4002203,4002203,4002305,4002305,4002407,4002407,4002505,4002505,4002604,4002604,4002710,4002710,4042150,4042214,4042257,4043031,4043217,4043222,4043800,4209030,4209057,4564003,4740306,4744012,4902087,4902093,7110206,7110215,7110227,7110233,7118205,7118221,7118319,7118379,7118515,7118515,8214601,13006012,13006016,13010034,13050008,13100042,13100049,13100078,13101024,13101025,13101065,13104626,13107303,13108005,14050003,14051080,14100012,14100030,14100045,14100046,14100047,14200006,14200012,18002001,18006003,18050002,18060001 ]
+
+downstream_hook_id = "#{Script.current.name}"
+filepath = File.join(SCRIPT_DIR, Script.current.name)
+snodepng = File.join(filepath, "supernode.png")
+deadpng = File.join(filepath, "dead.png")
+
+downstream_proc = proc { |line, _server_string|
+  line = line.to_s # Ensure line is always a String.
+  newline = nil
+  if checkdead == true
+    newline = "<background/><background window='main' mode='fill' opacity='80' img=\"#{deadpng}\"/>"
+  elsif line =~ /(<nav rm='\d+'.*)/ && checkdead == false
+    origline = $1
+    current_image = File.join(filepath, "u#{Room.current.uid.max}.png")
+    unless File.exist?(current_image)
+      current_image = File.join(filepath, "#{Room.current.location}.png")
+    end
+    if supernodes.include?(Room.current.uid.max)
+      sntag = "<background window='room' mode='full' align='right' valign='bottom' opacity='80' img=\"#{snodepng}\"/>"
+    else
+      sntag = "<background window='room'/>"
+    end
+    bgtag = "#{sntag}<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"#{current_image}\"/>"
+    newline = "#{bgtag}#{origline}"
+  end
+  if newline
+    newline
+  else
+    line
+  end
+}
+
+
+if Script.current.vars[1] =~ /^stop/i
+  if DownstreamHook.list.include?(downstream_hook_id)
+    DownstreamHook.remove(downstream_hook_id)
+    respond "\n--- Lich: #{Script.current.name} service stopped\n"
+  else
+    respond "\n--- Lich: #{Script.current.name} service is not running\n"
+  end
+  exit
+else
+  if DownstreamHook.list.include?(downstream_hook_id)
+    respond "--- Lich: #{Script.current.name} service already running\n"
+  else
+    DownstreamHook.add(downstream_hook_id, downstream_proc)
+    respond "\n--- Lich: #{Script.current.name} service started\n"
+  end
+  exit
+end
