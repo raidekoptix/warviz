@@ -33,7 +33,7 @@ downstream_proc = proc { |line, _server_string|
   line = line.to_s # Ensure line is always a String.
   newline = nil
   if checkdead == true
-    newline = "<background/><background window='main' mode='fill' opacity='80' img=\"#{deadpng}\"/>"
+    newline = "<background window='room'/><background window='main' mode='fill' opacity='80' img=\"#{deadpng}\"/>"
   elsif line =~ /(<nav rm='\d+'.*)/ && checkdead == false
     origline = $1
     current_image = File.join(filepath, "u#{Room.current.uid.max}.png")
