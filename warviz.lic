@@ -56,6 +56,12 @@ downstream_proc = proc { |line, _server_string|
 }
 
 
+if Script.current.vars[1] =~ /^test/i
+  echo "Setting main background..."
+  puts("<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"/Users/raidek/Desktop/Lich5/scripts/warviz/u5052.png\"/>")
+  exit
+end
+
 if Script.current.vars[1] =~ /^stop/i
   if DownstreamHook.list.include?(downstream_hook_id)
     DownstreamHook.remove(downstream_hook_id)
