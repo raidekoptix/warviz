@@ -71,5 +71,16 @@ else
     DownstreamHook.add(downstream_hook_id, downstream_proc)
     respond "\n--- Lich: #{Script.current.name} service started\n"
   end
-  exit
 end
+
+current_image = File.join(filepath, "u#{Room.current.uid.max}.png")
+unless File.exist?(current_image)
+  current_image = File.join(filepath, "#{Room.current.location}.png")
+end
+if supernodes.include?(Room.current.uid.max)
+  sntag = "<background window='room' mode='full' align='right' valign='bottom' opacity='80' img=\"#{snodepng}\"/>"
+else
+  sntag = "<background window='room'/>"
+end
+bgtag = "#{sntag}<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"#{current_image}\"/>"
+puts bgtag
