@@ -1,3 +1,4 @@
+#QUIET
 =begin
 
 	Warlock integration of Visualizer.lic with some additional ambient niceties
@@ -9,7 +10,7 @@
    original author: Visualizer.lic by Selfane, Tysong (art by Alosaka, Oro)
               game: any
            version: 1.1.0
-          required: Lich >= 5.17.0
+          required: Lich >= 5.17.0, Warlock >=3.0.167
 
    changelog:
       1.1.0 (2026-05-07)
@@ -26,28 +27,26 @@ no_pause_all
 hide_me
 silence_me
 
-supernodes = [ 1118,3005,3040,4102,5052,7120,7199,7354,7355,102103,103003,104002,105005,106013,107102,108004,109006,210001,211002,212006,213005,214011,216005,217006,218013,219051,312033,336651,397002,2101008,2101400,2101945,3001001,3001025,3003041,3010004,3201029,3201112,3216007,3216012,3216024,4002006,4002006,4002113,4002113,4002203,4002203,4002305,4002305,4002407,4002407,4002505,4002505,4002604,4002604,4002710,4002710,4042150,4042214,4042257,4043031,4043217,4043222,4043800,4209030,4209057,4564003,4740306,4744012,4902087,4902093,7110206,7110215,7110227,7110233,7118205,7118221,7118319,7118379,7118515,7118515,8214601,13006012,13006016,13010034,13050008,13100042,13100049,13100078,13101024,13101025,13101065,13104626,13107303,13108005,14050003,14051080,14100012,14100030,14100045,14100046,14100047,14200006,14200012,18002001,18006003,18050002,18060001 ]
+supernodes = [ 156,188,194,228,288,318,477,601,638,728,1005,1259,1263,1438,1481,1572,1844,1932,2300,2400,2777,3365,3428,3449,3486,3519,3542,3544,3600,3668,3735,3807,3880,4653,5732,5751,7986,8754,8859,9242,10068,10374,10855,10861,12537,13362,13920,13942,14029,14234,14627,16001,16183,17587,17589,18258,18687,18850,19290,20695,20707,20713,20721,20734,20762,20770,20777,20869,21310,21330,21689,21749,22118,23211,24433,24473,24555,26841,26947,26954,26969,26972,27840,28709,28717,28718,28719,28742,28813,28916,28937,28950,28990,29623,30276,31122,36157 ]
 
 downstream_hook_id = "#{Script.current.name}"
-roomroot = File.join(SCRIPT_DIR, Script.current.name, "GSIV")
+gameroot = File.join(SCRIPT_DIR, Script.current.name, XMLData.game)
 genroot = File.join(SCRIPT_DIR, Script.current.name, "generic")
 
 downstream_proc = proc { |line, _server_string|
-  line = line.to_s # Ensure line is always a String.
   newline = nil
   if checkdead == true
     newline = "<background window='room'/><background window='main' mode='fill' opacity='80' img=\"#{File.join(genroot, 'dead.png')}\"/>"
   elsif line =~ /(<nav rm='\d+'.*)/ && checkdead == false
     origline = $1
-    current_image = File.join(roomroot, "id", "#{Room.current.id}.png")
+    current_image = File.join(gameroot, "id", "#{Room.current.id}.png")
     unless File.exist?(current_image)
-      current_image = File.join(roomroot, "uid", "u#{Room.current.uid.max}.png")
+      current_image = File.join(gameroot, "uid", "u#{Room.current.uid.max}.png")
     end
     unless File.exist?(current_image)
-      current_image = File.join(roomroot, "location", "#{Room.current.location}.png")
+      current_image = File.join(gameroot, "location", "#{Room.current.location}.png")
     end
-    # TODO: Fix supernodes to normal id
-    if supernodes.include?(Room.current.uid.max)
+    if supernodes.include?(Room.current.id)
       sntag = "<background window='room' mode='full' align='right' valign='bottom' opacity='80' img=\"#{File.join(genroot, 'supernode.png')}\"/>"
     else
       sntag = "<background window='room'/>"
@@ -63,18 +62,6 @@ downstream_proc = proc { |line, _server_string|
 }
 
 
-if Script.current.vars[1] =~ /^test/i
-  echo "Setting main background File..."
-  puts("<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"/Users/raidek/Desktop/Lich5/scripts/warviz/u5052.png\"/>")
-  exit
-end
-
-if Script.current.vars[1] =~ /^url/i
-  echo "Setting main background URL..."
-  puts("<background img=\"https://cdn.discordapp.com/attachments/475200815116713988/1466171966741287123/image.png\"/>")
-  exit
-end
-
 if Script.current.vars[1] =~ /^clear/i
   echo "Clearing main background URL..."
   puts("<background/>")
@@ -84,9 +71,9 @@ end
 if Script.current.vars[1] =~ /^stop/i
   if DownstreamHook.list.include?(downstream_hook_id)
     DownstreamHook.remove(downstream_hook_id)
-    respond "\n--- Lich: #{Script.current.name} service stopped\n"
+    respond "--- Lich: #{Script.current.name} service stopped\n"
   else
-    respond "\n--- Lich: #{Script.current.name} service is not running\n"
+    respond "--- Lich: #{Script.current.name} service is not running\n"
   end
   exit
 else
@@ -94,24 +81,25 @@ else
     respond "--- Lich: #{Script.current.name} service already running\n"
   else
     DownstreamHook.add(downstream_hook_id, downstream_proc)
-    respond "\n--- Lich: #{Script.current.name} service started\n"
+    respond "--- Lich: #{Script.current.name} service started\n"
   end
 end
 
 if checkdead == true
-  newline = "<background window='room'/><background window='main' mode='fill' opacity='80' img=\"#{File.join(genroot, 'dead.png')}\"/>"
+  initline = "<background window='room'/><background window='main' mode='fill' opacity='80' img=\"#{File.join(genroot, 'dead.png')}\"/>"
 else
-  current_image = File.join(roomroot, "id", "#{Room.current.id}.png")
+  current_image = File.join(gameroot, "id", "#{Room.current.id}.png")
   unless File.exist?(current_image)
-    current_image = File.join(roomroot, "uid", "#{Room.current.uid.max}.png")
+    current_image = File.join(gameroot, "uid", "#{Room.current.uid.max}.png")
   end
   unless File.exist?(current_image)
-    current_image = File.join(filepath, "location", "#{Room.current.location}.png")
+    current_image = File.join(gameroot, "location", "#{Room.current.location}.png")
   end
-  if supernodes.include?(Room.current.uid.max)
+  initline = "<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"#{current_image}\"/>"
+  if supernodes.include?(Room.current.id)
     sntag = "<background window='room' mode='full' align='right' valign='bottom' opacity='80' img=\"#{File.join(genroot, 'supernode.png')}\"/>"
   end
 end
 
 puts sntag
-puts "<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"#{current_image}\"/>"
+puts initline
