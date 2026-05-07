@@ -8,10 +8,14 @@
             author: Raidek (git@raidek.tv)
    original author: Visualizer.lic by Selfane, Tysong (art by Alosaka, Oro)
               game: any
-           version: 1.0.0
+           version: 1.1.0
           required: Lich >= 5.17.0
 
    changelog:
+      1.1.0 (2026-05-07)
+        - Switched to standard room_id (.uid.max had a huge performance hit)
+        - Translated uid images to id (kept uid for compatibility for now)
+        - Reworked directory structure for multiple game support
       1.0.0 (2026-05-05)
         Initial release
 =end
