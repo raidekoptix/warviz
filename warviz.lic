@@ -36,7 +36,7 @@ genroot = File.join(SCRIPT_DIR, Script.current.name, "generic")
 downstream_proc = proc { |line, _server_string|
   newline = nil
   if checkdead == true
-    newline = "<background window='room'/><background window='main' mode='fill' opacity='80' img=\"#{File.join(genroot, 'dead.png')}\"/>"
+    newline = "<background window='room'/><background window='main' mode='fill' opacity='80' img=\"#{File.join(genroot, 'dead.png')}\"/>#{line}"
   elsif line =~ /(<nav rm='\d+'.*)/ && checkdead == false
     origline = $1
     current_image = File.join(gameroot, "id", "#{Room.current.id}.png")
