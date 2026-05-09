@@ -35,83 +35,51 @@ gameroot = File.join(SCRIPT_DIR, "img.#{Script.current.name}", XMLData.game)
 genroot = File.join(SCRIPT_DIR, "img.#{Script.current.name}", "generic")
 mineroot = File.join(gameroot, "minecart")
 
+styles = {
+	'main' => "align='right' mode='gradient' start='0' end='30' opacity='80'",
+	'room' => "mode='full' align='right' valign='bottom' opacity='80'",
+	'dead' => "mode='fill' opacity='80' img=\"#{File.join(genroot, 'dead.png')}\""
+}
+
 downstream_proc = proc { |line, _server_string|
   newline = nil
   if checkdead == true
-    newline = "<background window='room'/><background window='main' mode='fill' opacity='80' img=\"#{File.join(genroot, 'dead.png')}\"/>#{line}"
+    newline = "<background window='room'/><background window='main' #{styles['dead']}/>#{line}"
   elsif minecarts.include?(Room.current.id)
-    if line =~ /(Amazingly the cart stays) on the track as it takes a sharp turn to the right./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(As the cart careens) uncontrollably down the track, the rushing wind bellows and howls./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(Careening along the track) at incredible speed, the cart lurches suddenly as the track runs out, flying across empty space and crashing down a few feet later as the track begins again on the other side of the fissure, slowing only slightly./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(Glowing blue moss) covers the rock walls in this section of the tunnel.  Dampness permeates the area./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(Hitting a slightly decayed length of wood) lying sideways across the track, the cart lurches upward splintering the wood into a thousand pieces, connecting with the track again with a jolt./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(Leaning against the rough rock walls), the skeletal remains of a humanoid can be seen as though relaxing after a hard day's labor on the tracks, pickaxe still clutched firmly in its bony hands./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(Loud dripping sounds echo) from diverging tunnels as the cart continues its journey./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(Plunging downward) at amazing speed the cart suddenly rises, looping in a full circle before leveling out again./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(Proceeding at astonishing speed), the cart suddenly plunges into a lightless tunnel./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(Rocks and debris fall) into the deep gorge at the cart's passing as it speeds headlong into a darkened tunnel./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(Rounding a curve the cart tilts) to one side as two of its wheels leave the track for a few heart-stopping moments./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(Shuddering noticeably), the cart begins its journey, moving forward over a slight rise in the track before plunging downward picking up speed./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(The cart jolts suddenly to the left) as it careens around the corner at breakneck speed./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(The cart rocks precariously) as it speeds along the track across a deep gorge./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(The cart slows a bit) as it begins to rise upward along the tracks, clanking loudly.  Sapphires, diamonds, and rubies imbedded in the stone walls of the tunnel sparkle brightly as stray beams of light strike them./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(The clanking noise of the cart) gliding along the track echoes loudly as it moves through a large cavern./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(The clanking of the cart echoes) through the tunnel as it slows steadily before suddenly plunging down a steep embankment./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(The wind howls loudly) as the cart careens uncontrollably down the track./
-      current_image = $1 + ".png"
-    end
-    if line =~ /(You hastily exit) the cart./
-      current_image = $1 + ".png"
-    end
-    newline = "<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"#{current_image}\"/>#{line}"
+    current_image = "#{$1}.png" if /(Amazingly the cart stays) on the track as it takes a sharp turn to the right./ =~ line
+    current_image = "#{$1}.png" if /(As the cart careens) uncontrollably down the track, the rushing wind bellows and howls./ =~ line
+    current_image = "#{$1}.png" if /(Careening along the track) at incredible speed, the cart lurches suddenly as the track runs out, flying across empty space and crashing down a few feet later as the track begins again on the other side of the fissure, slowing only slightly./ =~ line
+    current_image = "#{$1}.png" if /(Glowing blue moss) covers the rock walls in this section of the tunnel.  Dampness permeates the area./ =~ line
+    current_image = "#{$1}.png" if /(Hitting a slightly decayed length of wood) lying sideways across the track, the cart lurches upward splintering the wood into a thousand pieces, connecting with the track again with a jolt./ =~ line
+    current_image = "#{$1}.png" if /(Leaning against the rough rock walls), the skeletal remains of a humanoid can be seen as though relaxing after a hard day's labor on the tracks, pickaxe still clutched firmly in its bony hands./ =~ line
+    current_image = "#{$1}.png" if /(Loud dripping sounds echo) from diverging tunnels as the cart continues its journey./ =~ line
+    current_image = "#{$1}.png" if /(Plunging downward) at amazing speed the cart suddenly rises, looping in a full circle before leveling out again./ =~ line
+    current_image = "#{$1}.png" if /(Proceeding at astonishing speed), the cart suddenly plunges into a lightless tunnel./ =~ line
+    current_image = "#{$1}.png" if /(Rocks and debris fall) into the deep gorge at the cart's passing as it speeds headlong into a darkened tunnel./ =~ line
+    current_image = "#{$1}.png" if /(Rounding a curve the cart tilts) to one side as two of its wheels leave the track for a few heart-stopping moments./ =~ line
+    current_image = "#{$1}.png" if /(Shuddering noticeably), the cart begins its journey, moving forward over a slight rise in the track before plunging downward picking up speed./ =~ line
+    current_image = "#{$1}.png" if /(The cart jolts suddenly to the left) as it careens around the corner at breakneck speed./ =~ line
+    current_image = "#{$1}.png" if /(The cart rocks precariously) as it speeds along the track across a deep gorge./ =~ line
+    current_image = "#{$1}.png" if /(The cart slows a bit) as it begins to rise upward along the tracks, clanking loudly.  Sapphires, diamonds, and rubies imbedded in the stone walls of the tunnel sparkle brightly as stray beams of light strike them./ =~ line
+    current_image = "#{$1}.png" if /(The clanking noise of the cart) gliding along the track echoes loudly as it moves through a large cavern./ =~ line
+    current_image = "#{$1}.png" if /(The clanking of the cart echoes) through the tunnel as it slows steadily before suddenly plunging down a steep embankment./ =~ line
+    current_image = "#{$1}.png" if /(The wind howls loudly) as the cart careens uncontrollably down the track./ =~ line
+    current_image = "#{$1}.png" if /(You hastily exit) the cart./ =~ line
+    newline = "<background window='main' #{styles['main']} img=\"#{current_image}\"/>"
   elsif line =~ /(<nav rm='\d+'.*)/ && checkdead == false
     current_image = File.join(gameroot, "id", "#{Room.current.id}.png")
-    unless File.exist?(current_image)
-      current_image = File.join(gameroot, "uid", "u#{Room.current.uid.max}.png")
-    end
+#    unless File.exist?(current_image)
+#      current_image = File.join(gameroot, "uid", "u#{Room.current.uid.max}.png")
+#    end
     unless File.exist?(current_image)
       current_image = File.join(gameroot, "location", "#{Room.current.location}.png")
     end
     if supernodes.include?(Room.current.id)
-      sntag = "<background window='room' mode='full' align='right' valign='bottom' opacity='80' img=\"#{File.join(genroot, 'supernode.png')}\"/>"
+      sntag = "<background window='room' #{styles['room']} img=\"#{File.join(genroot, 'supernode.png')}\"/>"
     else
       sntag = "<background window='room'/>"
     end
-    bgtag = "<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"#{current_image}\"/>"
+    bgtag = "<background window='main' #{styles['main']} img=\"#{current_image}\"/>"
     newline = "#{sntag}#{bgtag}"
   end
   if newline
@@ -120,13 +88,6 @@ downstream_proc = proc { |line, _server_string|
     line
   end
 }
-
-
-if Script.current.vars[1] =~ /^clear/i
-  echo "Clearing main background URL..."
-  puts("<background/>")
-  exit
-end
 
 if Script.current.vars[1] =~ /^stop/i
   if DownstreamHook.list.include?(downstream_hook_id)
@@ -146,18 +107,18 @@ else
 end
 
 if checkdead == true
-  initline = "<background window='room'/><background window='main' mode='fill' opacity='80' img=\"#{File.join(genroot, 'dead.png')}\"/>"
+  initline = "<background window='room'/><background window='main' #{styles['dead']} img=\"#{File.join(genroot, 'dead.png')}\"/>"
 else
   current_image = File.join(gameroot, "id", "#{Room.current.id}.png")
-  unless File.exist?(current_image)
-    current_image = File.join(gameroot, "uid", "#{Room.current.uid.max}.png")
-  end
+#  unless File.exist?(current_image)
+#    current_image = File.join(gameroot, "uid", "#{Room.current.uid.max}.png")
+#  end
   unless File.exist?(current_image)
     current_image = File.join(gameroot, "location", "#{Room.current.location}.png")
   end
-  initline = "<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"#{current_image}\"/>"
+  initline = "<background window='main' #{styles['main']} img=\"#{current_image}\"/>"
   if supernodes.include?(Room.current.id)
-    sntag = "<background window='room' mode='full' align='right' valign='bottom' opacity='80' img=\"#{File.join(genroot, 'supernode.png')}\"/>"
+    sntag = "<background window='room' #{styles['room']} img=\"#{File.join(genroot, 'supernode.png')}\"/>"
   end
 end
 
