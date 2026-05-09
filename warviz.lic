@@ -38,7 +38,6 @@ downstream_proc = proc { |line, _server_string|
   if checkdead == true
     newline = "<background window='room'/><background window='main' mode='fill' opacity='80' img=\"#{File.join(genroot, 'dead.png')}\"/>#{line}"
   elsif line =~ /(<nav rm='\d+'.*)/ && checkdead == false
-    origline = $1
     current_image = File.join(gameroot, "id", "#{Room.current.id}.png")
     unless File.exist?(current_image)
       current_image = File.join(gameroot, "uid", "u#{Room.current.uid.max}.png")
@@ -52,7 +51,7 @@ downstream_proc = proc { |line, _server_string|
       sntag = "<background window='room'/>"
     end
     bgtag = "#{sntag}<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"#{current_image}\"/>"
-    newline = "#{bgtag}#{origline}"
+    newline = "#{bgtag}#{line}"
   end
   if newline
     newline
