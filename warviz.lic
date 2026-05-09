@@ -32,6 +32,7 @@ supernodes = [ 156,188,194,228,288,318,477,601,638,728,1005,1259,1263,1438,1481,
 downstream_hook_id = "#{Script.current.name}"
 gameroot = File.join(SCRIPT_DIR, "img.#{Script.current.name}", XMLData.game)
 genroot = File.join(SCRIPT_DIR, "img.#{Script.current.name}", "generic")
+mineroot = File.join(gameroot, "minecart")
 
 downstream_proc = proc { |line, _server_string|
   newline = nil
@@ -52,6 +53,65 @@ downstream_proc = proc { |line, _server_string|
     end
     bgtag = "#{sntag}<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"#{current_image}\"/>"
     newline = "#{bgtag}#{line}"
+  elsif Room.current.id == 19547
+    if line =~ /(Amazingly the cart stays) on the track as it takes a sharp turn to the right./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(As the cart careens) uncontrollably down the track, the rushing wind bellows and howls./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(Careening along the track) at incredible speed, the cart lurches suddenly as the track runs out, flying across empty space and crashing down a few feet later as the track begins again on the other side of the fissure, slowing only slightly./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(Glowing blue moss) covers the rock walls in this section of the tunnel.  Dampness permeates the area./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(Hitting a slightly decayed length of wood) lying sideways across the track, the cart lurches upward splintering the wood into a thousand pieces, connecting with the track again with a jolt./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(Leaning against the rough rock walls), the skeletal remains of a humanoid can be seen as though relaxing after a hard day's labor on the tracks, pickaxe still clutched firmly in its bony hands./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(Loud dripping sounds echo) from diverging tunnels as the cart continues its journey./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(Plunging downward) at amazing speed the cart suddenly rises, looping in a full circle before leveling out again./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(Proceeding at astonishing speed), the cart suddenly plunges into a lightless tunnel./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(Rocks and debris fall) into the deep gorge at the cart's passing as it speeds headlong into a darkened tunnel./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(Rounding a curve the cart tilts) to one side as two of its wheels leave the track for a few heart-stopping moments./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(Shuddering noticeably), the cart begins its journey, moving forward over a slight rise in the track before plunging downward picking up speed./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(The cart jolts suddenly to the left) as it careens around the corner at breakneck speed./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(The cart rocks precariously) as it speeds along the track across a deep gorge./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(The cart slows a bit) as it begins to rise upward along the tracks, clanking loudly.  Sapphires, diamonds, and rubies imbedded in the stone walls of the tunnel sparkle brightly as stray beams of light strike them./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(The clanking noise of the cart) gliding along the track echoes loudly as it moves through a large cavern./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(The clanking of the cart echoes) through the tunnel as it slows steadily before suddenly plunging down a steep embankment./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(The wind howls loudly) as the cart careens uncontrollably down the track./
+      current_image = $1 + ".png"
+    end
+    if line =~ /(You hastily exit) the cart./
+      current_image = $1 + ".png"
+    end
+    newline = "<background window='main' align='right' mode='gradient' start='0' end='30' opacity='80' img=\"#{current_image}\"/>#{line}"
   end
   if newline
     newline
