@@ -38,13 +38,13 @@ mineroot = File.join(gameroot, "minecart")
 styles = {
 	'main' => "align='right' mode='gradient' start='0' end='30' opacity='80'",
 	'room' => "mode='full' align='right' valign='bottom' opacity='80'",
-	'dead' => "mode='fill' opacity='80' img=\"#{File.join(genroot, 'dead.png')}\""
+	'dead' => "mode='hfill' align='right' opacity='5' img=\"#{File.join(genroot, 'dead.png')}\""
 }
 
 downstream_proc = proc { |line, _server_string|
   newline = nil
   if checkdead == true
-    newline = "<background window='room'/><background window='main' #{styles['dead']}/>#{line}"
+    newline = "<background window='room'/><background window='main' #{styles['dead']}/>"
   elsif minecarts.include?(Room.current.id)
     current_image = "#{$1}.png" if /(Amazingly the cart stays) on the track as it takes a sharp turn to the right./ =~ line
     current_image = "#{$1}.png" if /(As the cart careens) uncontrollably down the track, the rushing wind bellows and howls./ =~ line
@@ -89,6 +89,10 @@ downstream_proc = proc { |line, _server_string|
   end
 }
 
+if Script.current.vars[1] =~ /^clear/i
+  puts "<background/>"
+  exit
+end
 if Script.current.vars[1] =~ /^stop/i
   if DownstreamHook.list.include?(downstream_hook_id)
     DownstreamHook.remove(downstream_hook_id)
