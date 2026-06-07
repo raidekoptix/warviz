@@ -74,17 +74,13 @@ downstream_proc = proc { |line, _server_string|
     unless File.exist?(current_image)
       current_image = File.join(gameroot, "location", "#{Room.current.location}.png")
     end
-    if UserVars.warviz_last != current_image
-      if supernodes.include?(Room.current.id)
-        sntag = "<background window='room' #{styles['room']} img=\"#{File.join(genroot, 'supernode.png')}\"/>"
-      else
-        sntag = "<background window='room'/>"
-      end
-      UserVars.warviz_last = current_image
-      UserVars.save()
-      bgtag = "<background window='main' #{styles['main']} img=\"#{current_image}\"/>"
-      newline = "#{sntag}#{bgtag}"
+    if supernodes.include?(Room.current.id)
+      sntag = "<background window='room' #{styles['room']} img=\"#{File.join(genroot, 'supernode.png')}\"/>"
+    else
+      sntag = "<background window='room'/>"
     end
+    bgtag = "<background window='main' #{styles['main']} img=\"#{current_image}\"/>"
+    newline = "#{sntag}#{bgtag}"
   end
   if newline
     newline + line
@@ -128,8 +124,6 @@ else
   if supernodes.include?(Room.current.id)
     sntag = "<background window='room' #{styles['room']} img=\"#{File.join(genroot, 'supernode.png')}\"/>"
   end
-  UserVars.warviz_last = current_image
-  UserVars.save()
 end
 
 puts sntag
