@@ -36,7 +36,7 @@ genroot = File.join(SCRIPT_DIR, "img.#{Script.current.name}", "generic")
 mineroot = File.join(gameroot, "minecart")
 
 styles = {
-	'main' => "align='right' mode='gradient' start='0' end='30' opacity='80'",
+	'main' => "align='right' mode='gradient' start='0' end='30' opacity='30'",
 	'room' => "mode='full' align='right' valign='bottom' opacity='80'",
 	'dead' => "mode='hfill' align='right' opacity='5' img=\"#{File.join(genroot, 'dead.png')}\""
 }
